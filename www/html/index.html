@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>Progetto 100+100</title>
+    <link rel="shortcut icon" href="/static/img/favicon.png" type="image/png" /> <!-- icona webapp -->
+
+    <!-- -- -- -- -- -- -- -- -- -- -- CSS -- -- -- -- -- -- -- -- -- -- -- -- -- -->
+    
+    <!-- MATERIALIZE-->
+    <link href="/static/css/materialize.min.css" rel="stylesheet"> <!-- per calendario e selettore ore/minuti -->
+    
+    <!-- MDBOOTSTRAP -->
+    <link rel="stylesheet" href="/static/css/all.css">             <!-- FONT AWESOME per il font  -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">   <!-- Bootstrap core CSS        -->
+    <link href="/static/css/mdb.min.css" rel="stylesheet">         <!-- Material Design Bootstrap -->
+    
+    <!-- CSS statico aggiuntivo -->
+    <link rel="stylesheet" type='text/css' href="/static/css/main/style.css" />
+    
+</head>
+<body>
+    <!-- Contenitore vue -->
+    <div id="app">
+        
+        <transition name="slide-fade">
+            <!-- Animazione cambio pagine -->
+            <router-view></router-view> <!-- Pagina visualizzata -->
+        </transition>
+    </div>
+
+    <!-- -- -- -- -- -- -- -- -- -- -- JS -- -- -- -- -- -- -- -- -- -- -- -- -- -->
+
+    <script>
+        var boold = false; // variabile debug per i console.log()
+    </script>
+
+    <!-- SCRIPT MATERIALIZE -->
+    <script type="text/javascript" src="/static/js/materialize/materialize.min.js"></script> <!-- per calendario e selettore ore/minuti -->
+
+    <!-- SCRIPTS MDBOOTSTRAP -->
+    <script type="text/javascript" src="/static/js/mdbootstrap/jquery-3.3.1.min.js"></script> <!-- JQuery -->
+    <script type="text/javascript" src="/static/js/mdbootstrap/popper.min.js"></script>       <!-- Bootstrap tooltips        -->
+    <script type="text/javascript" src="/static/js/mdbootstrap/bootstrap.min.js"></script>    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="/static/js/mdbootstrap/mdb.min.js"></script>          <!-- MDB core JavaScript       -->
+
+    <!-- Utility varie -->
+    <script src="/static/js/floorplan/svg.min.js"></script>  <!-- Per mappa SVG       -->
+    <script src="/static/js/options/axios.min.js"></script>  <!-- Per le HTTP request -->
+    <script src="/static/js/touch/hammer.min.js"></script>   <!-- Per il touch/swipe  -->
+    <script src="/static/js/timestamp/t2ts.js"></script>     <!-- Timestamp -> Data   -->
+    <script src="/static/js/touch/interact.min.js"></script> <!-- Permette di trascinare i label della planimetria -->
+
+    <!-- VUE -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> --> <!-- Vue development mode -->
+    <script src="/static/js/vue/vue.min.js"></script>        <!-- Vue -->
+    <script src="/static/js/vue/vue-router.min.js"></script> <!-- Vue router --> 
+
+    <!-- MAIN: il cuore del sistema Frontend -->
+    <script src="/static/js/main/home.js"></script>    <!-- Schermata principale   "Home"    -->
+    <script src="/static/js/main/graph.js"></script>   <!-- Schermata grafici      "Graph"   -->
+    <script src="/static/js/main/options.js"></script> <!-- Schermata opzioni      "Options" -->
+    <script src="/static/js/main/infos.js"></script>   <!-- Schermata informazioni "Infos"   -->
+    
+    <script>
+    
+
+    function componentToHex(c) {
+        /**
+         * Restituisci <c> come stringa esadecimale di due caratteri.
+         *
+         * @param {int} c intero da convertire in stringa esadecimale
+         * @return {string} stringa esadecimale di <c> (due caratteri)
+        */
+
+        // converti il valore intero <c> in stringa.
+        // <c> e' in base 16 
+        var hex = c.toString(16);
+
+        // se la stringa e' lunga un carattere, concatena uno zero davanti al carattere,
+        // altrimenti restituisci i caratteri
+        return hex.length == 1 ? "0" + hex : hex;
+    }
+
+
+    function hexToRgb(hex) {
+        /**
+         * Restituisce <hex> come oggetto dei 3 componenti red, green, blue.
+         *
+         * Viene usata una regular expression che:
+         * - da una stringa che inizia con "#"
+         * - e che possiede 3 set da due caratteri (dalla a alla f e i digits, 0-9)
+         *
+         * @param {string} hex stringa esadecimale di un colore ( formato #RRGGBB )
+         * @return {object|null} oggetto con i componenti r, g, b oppure null 
+        */
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+        // se la regular expression ha ottenuto i valori, restituisci un oggetto,
+        // altrimenti restituisci null
+        return result ? {
+            r: parseInt(result[1], 16), // prendi i componenti r e convertili in intero con base 16
+            g: parseInt(result[2], 16), // prendi i componenti g e convertili in intero con base 16
+            b: parseInt(result[3], 16)  // prendi i componenti b e convertili in intero con base 16
+        } : null;
+    }
+
+    
+    function rgbToHex(r, g, b) {
+        /**
+         * Restituisce i componenti red, green e blue come stringa esadecimale.
+         * 
+         * > componentToHex() trasforma gli interi in stringhe con valori esadecimali (0-9, A-F)
+         * > e si assicura che le stringhe restituite siano formate da due caratteri
+         *
+         * @param {int} r compoente rosso, red
+         * @param {int} g componente verde, green
+         * @param {int} b componente blu, blue
+         * @return {string} result stringa esadecimale di un colore
+        */
+        var result = "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+        return result;
+    }
+
+
+    function adjustBrightness(hex, percent, darken){
+        /**
+         * La funzione prende la stringa esadecimale <hex>,
+         * ottiene i valori esadecimali di r (red), g (green), b (blue),
+         * e li incrementa/decrementa in percentuale <percent>.
+         *
+         * se <darken> e' true, il colore <hex> viene scurito del <percent> percento
+         * se <darken> e' false, il colore <hex> viene schiarito del <percent> percento
+         *
+         * @param {string} hex colore esadecimale (formato "#RRGGBB")
+         * @param {int} percent intero, percentuale per chiarire/scurire il colore hex
+         * @param {bool} darken true scurisce il colore hex, false chiarisce il colore
+         * @return {string} stringa esadecimale di <hex> chiarito/scurito
+        */
+
+        // valore di default da cui ottenere percentuale (colore da schiarire)
+        var brightness = 255;
+
+        // se darken e' true, cambia il segno per ottenere un valore negativo
+        // dal calcolo successivo
+        if (darken){
+            brightness = -255
+        }
+
+        // ottieni il numero da sottrarre/sommare ai componenti del colore
+        // in base alla percentuale <percent>
+        // > Math.round() arrottonda il valore per essere intero
+        var steps = Math.round(percent*brightness/100);
+        
+        // impedisci al numero di essere maggiore di 255 e minore di -255
+        steps = Math.max(-255, Math.min(255, steps));
+
+        // usa la funzione hexToRgb() per ottenere i valori decimali di r, g e b
+        var rgb_vals = hexToRgb(hex);
+        
+        // calcola i nuovi valori decimali e impedisci al valore di essere
+        // maggiore di 255 e minore di 0
+        var r = Math.max(0, Math.min(255, rgb_vals.r + steps));
+        var g = Math.max(0, Math.min(255, rgb_vals.g + steps));
+        var b = Math.max(0, Math.min(255, rgb_vals.b + steps));
+
+        // chiama rgbToHex() per calcolare la stringa esadecimale #RRGGBB
+        return rgbToHex(r, g, b)
+    }
+
+
+    // oggetto che memorizza stati tra gli elementi, usato per il colore dell'interfaccia
+    var store = {
+        debug: boold,
+        state: {
+            usercolor: '' // contiene colore selezionato dall'utente
+        },
+        setMessageAction (newValue) {
+            /**
+             * Imposta store.state.usercolor a newValue
+             *
+             * @param {string} newValue stringa del formato #RRGGBB
+            */
+            if (this.debug) console.log('setMessageAction triggered with', newValue)
+            this.state.usercolor = newValue
+        },
+        clearMessageAction () {
+            /**
+             * Resetta store.state.usercolor come stringa vuota
+            */
+            if (this.debug) console.log('clearMessageAction triggered')
+            this.state.usercolor = ''
+        }
+    }
+
+    const routes = [
+        // lista di routes/pagine
+        { path: '/', component: Home, data: true },                // pagina principale   -> Home
+        { path: '/graph/:nodeid', component: Graph, props: true }, // pagina grafici      -> Graph, accetta proprieta'/parametri
+        { path: '/options', component: Options },                  // pagina impotazioni  -> Options
+        { path: '/infos', component: Infos }                       // pagina informazioni -> Infos
+    ]
+    
+    const router = new VueRouter({
+        routes // routes configurate per router
+    })
+
+    const app = new Vue({
+        router,           // uso router "router" in vue
+    }).$mount('#app')     // oggetto vue -> <div id="app"> </div>
+    
+    </script>
+</body>
+</html>

@@ -1,0 +1,483 @@
+/*
+    CSS PROGETTO201
+*/
+
+html, body, #app, .page {
+    height: 100%; /* occupa tutta l'altezza del parent */
+}
+
+.page{
+    /* Da usare per tutte le pagine */
+    position: absolute; /* Posizione assoluta per evitare effetto "bump/salto"            */
+    min-height: 100vh;  /* L'altezza della pagina deve essere minimo tutta pagina         */
+    width: 100vw;       /* La lunghezza della pagina deve essere sempre SOLO tutta pagina */
+}
+
+/* PLANIMETRIA */
+.floorplan{
+    position: relative;
+}
+
+/* TITOLI */
+.title{
+    height: 11vh;
+    margin-bottom: 0;
+}
+
+.text-container{
+    display: flex;           /* Per centrare testo*/
+    justify-content: center; /* Per centrare testo*/
+    align-items: center;     /* Per centrare testo*/
+}
+
+/* Per avere pulsanti in Home mezza pagina l'uno */
+.halfpage{
+    width: 50vw;
+}
+
+@media only screen and (max-width: 365px){
+    /* media per schermi mobile con lunghezza massima di 365 pixel */
+    .title{
+        /* Titolo troppo grande su mobile (va su due righe...) 
+            Todo: Mobile first...
+        */
+        font-size: 2.0rem;
+    }
+}
+
+/*#######################################################################################################*/
+
+/* VUE TRANSITION - TRANSIZIONE TRA PAGINE */
+
+.slide-fade-enter-active {
+    transition: all .4s ease; /* .4 secondi per entrare */
+}
+
+.slide-fade-leave-active {
+    transition: all .4s;      /* .4 secondi per uscire */
+}
+
+.slide-fade-enter{
+    transform: translateX(100%); /* trasla per l'asse X l'elemento del 100%     */
+    opacity: 0;                  /* imposta l'opacita' a 0, quindi non visibile */
+}
+
+.slide-fade-leave-to{
+    transform: translateX(100%); /* trasla per l'asse X l'elemento del 100%     */
+    opacity: 0;                  /* imposta l'opacita' a 0, quindi non visibile */
+}
+
+/*#######################################################################################################*/
+
+/* IMPOSTAZIONI - CALENDARIO E SELETTORE DATA/ORA 
+   Togli da calendario e selettore data/ora la parte bianca che "esce" dallo schermo
+*/
+
+.modal {
+    bottom: unset;
+}
+
+/*#######################################################################################################*/
+
+/* IMPOSTAZIONI - SELEZIONE COLORE INTERFACCIA
+   quadrati colorati
+*/
+
+.square {
+    position: relative; /* posizione relativa */
+    width: 80%;         /* larghezza 80 % del parent (aggiunge )*/
+}
+  
+.square:after {
+    /* Clearfix */
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+  
+.content {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center; /* Per centrare testo*/
+    align-items: center;     /* Per centrare testo*/
+}
+
+/*#######################################################################################################*/
+
+/* INFORMAZIONI - RIGA BIANCA E POSIZIONI ASSOLUTE */
+
+/* riga bianca che divide titolo da sottotitolo */
+.w3-border-grey{
+    background-color: white; 
+}
+
+/* posizione assoluta in basso a sinistra, usato per il copyright */
+.w3-display-bottomleft {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+/* posizione assoluta in alto a sinistra, usato per il pulsante per tornare indietro */
+.w3-display-topleft {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+/*#######################################################################################################*/
+
+/* INFORMAZIONI - PARTE TYPEWRITER
+    Credits: https://css-tricks.com/snippets/css/typewriter-effect/
+*/
+
+.typewriter h1 {
+    overflow: hidden;  /* Si assicura che il contenuto non sia visibile prima dell'animazione */
+    border-right: .15em solid white;  /* typwriter cursore */
+    white-space: nowrap;    /* Mantiene contenuto sulla stessa riga */
+    margin: 0 auto;         /* Gives that scrolling effect as the typing happens */
+    letter-spacing: .15em;  /* Spazio tra lettere */
+    animation:
+        typing 3.5s steps(40, end),          /* animazione scrittura: dura 3.5 secondi e impiega 40 step da inizio a fine animazione */
+        blink-caret .75s step-end infinite;  /* animazione blink cursore: dura 0.74 secondi, l'animazione rimane nello stato iniziale finche' non e' terminata, ripeti all'infinito */
+}
+
+/* Effetto scrittura */
+@keyframes typing {
+    from { width: 0 }   /* passa da 0% lunghezza */
+    to { width: 100% }  /* al 100% (gradualmente nei 40 step) */
+}
+
+/* Effetto scrittura cursore typewriter */
+@keyframes blink-caret {
+    from, to { border-color: transparent }  /* L'inizio e fine animazione rende trasparente/invisibile il cursore */
+    50% { border-color: white; }  /* A meta' animazione il cursore ha il colore $typecolor */
+}
+
+/*#######################################################################################################*/
+
+/* INFORMAZIONI - TESTO LISTA DATI SUL DB */
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;       /* nascondi il tooltip    */
+    width: 120px;             /* 120 pixel di lunghezza */
+    background-color: black;  /* colore di sfondo nero  */
+    color: white; /* colore del testo bianco */
+    text-align: center;       /* allinea il testo al centro                  */
+    border-radius: 6px;       /* raggio di 6 pixel sul bordo (smussa angoli) */
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;  /* posizione assoluta                                  */
+    z-index: 1;          /* livello di sovrapposizione 1 (metti sopra al resto) */
+    top: -5px;
+    right: 105%;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;  /* Quando il cursore passa sopra al tooltip, visualizzalo */
+}
+
+/*#######################################################################################################*/
+
+/* TITOLI E PULSANTI PER ANDARE INDIETRO
+   Parte che centra il testo e allinea a sinistra il pulsante per tornare indietro 
+*/
+
+.align-left{
+    float:left !important; /* allinea a sinistra */ 
+}
+ 
+.center-text-vert{
+    line-height:30px;  /* altezza del pulsante */
+}
+
+.center {
+    text-align: center;  /* testo centrato */
+    margin-right: 55px;  /* margine da destra (e da sinistra) del pulsante */   
+}
+
+/*#######################################################################################################*/
+
+/* 
+    CSS RELATIVI AI CONTAINER SVG E HIDDENLAYER (CONTAINER DEI LABEL) 
+*/
+
+#opt-floorplan > svg{
+    width: 100%;
+    height: 100%;
+}
+
+#opt-floorplan{
+    position: relative;
+}
+
+/* posizione assoluta per sovrapporre gli elementi */
+.box{
+    width: 100%;
+    height: 100%;            
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.8;
+}
+
+/* posiziona gli elementi al di sopra degli altri*/
+.stack-top{
+    z-index: 9;
+}
+
+.ontop {
+    position: absolute;
+    z-index: 9;
+    background-color: #f1f1f1;
+    text-align: center;
+    /* centra verticalmente e orizzontalmente il contenuto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ontop-header {
+    padding: 4px;
+    cursor: move;
+    z-index: 10;
+
+    color: #000;
+}
+
+/* elementi trascinabili */
+.draggable {
+    touch-action: none;
+    user-select: none;
+}
+
+#hiddenlayer{
+    touch-action: none;
+    user-select: none;
+}
+
+/* limita altezza dei container con planimetria */
+#home-container{
+    height: 90%;
+}
+
+.floorplan-container {
+    display: flex;
+    height: 80%;
+}
+
+#floorplan {
+    margin: auto;
+}
+
+#floorplan_img {
+    width: 100%;
+    height: auto;
+}
+
+
+@media (orientation: landscape) and (max-height: 950px){
+
+    .floorplan-container {
+        margin: 0px 5%;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 850px){
+
+    .floorplan-container {
+        margin: 0px 10%;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 750px){
+
+    .floorplan-container {
+        margin: 0px 16%;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 400px){
+
+    .floorplan-container {
+        margin: 0px 20%;
+    }
+}
+
+/*================================================================*/
+/*
+    IMPOSTAZIONI - SOVRASCRIVI STILI SWITCH
+*/
+
+/* CSS dello switch */
+.switch label input[type=checkbox]:checked+.lever {
+    background-color: var(--ucdark10);
+}
+
+.switch label input[type=checkbox]:checked+.lever:after {
+    background-color: var(--uclight10);
+}
+
+/*================================================================*/
+/*
+    IMPOSTAZIONI - SOVRASCRIVI STILI INPUT
+*/
+
+/* modifica riga sotto all'input */
+input[type=datetime-local]:focus:not([readonly]), 
+.md-form input[type=email]:focus:not([readonly]), 
+.md-form input[type=number]:focus:not([readonly]), 
+.md-form input[type=password]:focus:not([readonly]), 
+.md-form input[type=search-md]:focus:not([readonly]), 
+.md-form input[type=search]:focus:not([readonly]), 
+.md-form input[type=tel]:focus:not([readonly]), 
+.md-form input[type=text]:focus:not([readonly]), 
+.md-form input[type=time]:focus:not([readonly]), 
+.md-form input[type=url]:focus:not([readonly]), 
+.md-form textarea.md-textarea:focus:not([readonly]) {
+    -webkit-box-shadow: 0 1px 0 0 var(--uc);
+    box-shadow: 0 1px 0 0 var(--uc);
+    border-bottom: 1px solid var(--uc);
+}
+
+
+/* modifica riga sotto all'input */
+.md-form input[type=date]:focus:not([readonly])+label, 
+.md-form input[type=datetime-local]:focus:not([readonly])+label, 
+.md-form input[type=email]:focus:not([readonly])+label, 
+.md-form input[type=number]:focus:not([readonly])+label, 
+.md-form input[type=password]:focus:not([readonly])+label, 
+.md-form input[type=search-md]:focus:not([readonly])+label, 
+.md-form input[type=search]:focus:not([readonly])+label, 
+.md-form input[type=tel]:focus:not([readonly])+label, 
+.md-form input[type=text]:focus:not([readonly])+label, 
+.md-form input[type=time]:focus:not([readonly])+label, 
+.md-form input[type=url]:focus:not([readonly])+label, 
+.md-form textarea.md-textarea:focus:not([readonly])+label {
+    color: var(--uc);
+}
+
+
+/*================================================================*/
+/*
+    IMPOSTAZIONI - SOVRASCRIVI STILI DATEPICKER
+*/
+
+/* CSS datepicker / selettore data */
+.datepicker-date-display {
+    background-color: var(--uclight10);
+}
+
+.datepicker-cancel, .datepicker-clear, .datepicker-today, .datepicker-done {
+    color: var(--ucdark10);
+    padding: 0 1rem;
+}
+
+.datepicker-table td.is-selected {
+    background-color: var(--ucdark10);
+    color: white;
+}
+
+.datepicker-table td:active {
+    background-color: var(--ucdark10);
+    color: white;
+}
+
+.datepicker-table td:focus {
+    background-color: var(--ucdark10);
+    color: white;
+}
+
+.datepicker-table td.is-today {
+    color: var(--ucdark10);    
+}
+.datepicker-table td.is-today.is-selected {
+    color: white;    
+}
+
+button.month-prev:active{
+    background-color: var(--ucdark10);
+}
+
+button.month-next:active{
+    background-color: var(--ucdark10);
+}
+
+.dropdown-content li>a, .dropdown-content li>span {
+    color: var(--ucdark10);
+}
+
+.datepicker-day-button:focus {
+    /* Giorno tabatto/trascinato */
+    background-color: var(--uclight10);
+    opacity: 0.25;
+}
+
+/*================================================================*/
+/*
+    IMPOSTAZIONI - SOVRASCRIVI STILI TIMEPICKER
+*/
+/* colori timepicker/selettore ore e minuti */
+.timepicker-digital-display{
+    background-color: var(--uclight10);
+}
+
+timepicker-svg > g > line{
+    fill: var(--uclight10);
+    stroke: var(--uclight10);
+}
+
+.timepicker-canvas line {
+    stroke: var(--uclight10);
+}
+
+.timepicker-canvas-bg{
+    fill: var(--uclight10);
+}
+
+.timepicker-canvas-bearing{
+    fill: var(--uclight10);
+}
+
+.btn-flat.timepicker-close.waves-effect{
+    color: var(--uclight10);
+}
+
+.text-primary{
+    color: white!important;
+}
+
+.timepicker-tick:hover{
+    background-color: var(--uclight10);
+    opacity: 0.25;
+}
+
+
+/*================================================================*/
+/*
+    IMPOSTAZIONI - SOVRASCRIVI STILI PULSANTI
+*/
+
+.bg-color {
+    color: white;  /* colore testo */
+    background-color: var(--uc); /* colore interno */
+    border-color: var(--ucdark15); /* colore bordo */
+}
+
+.bg-color:hover{
+    background-color: var(--ucdark10); /* colore interno mouse sopra oggetto */
+}
+
+.bg-color:focus, .bg-color:active , .bg-color:visited {
+    background-color: var(--uclight10); /* colore interno mouse ci clicca / ha cliccato sopra */
+}
+
